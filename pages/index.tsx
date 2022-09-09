@@ -24,7 +24,7 @@ const Home: NextPage<homePropType, {}> = (props) => {
       <main className={styles.loginWrapper}>
         <div className={styles.headerWrapper}>
           <Icon path={mdiMusicNoteEighth} size="4rem" />
-          <h1>Score Run</h1>
+          <h1>Score Rum</h1>
         </div>
         <div className={styles.loginButtonWrapper}>
           <Login NAVER_CLIENT_ID={props.NAVER_CLIENT_ID}/>

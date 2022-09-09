@@ -1,9 +1,10 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { UserInfo } from "../../definition/primary";
 import styles from "./naver.module.scss";
 type naverCallback = {
   NAVER_CLIENT_ID: string;
-  getUserInfo: (callbackInfo: {age: string, gender: string, id: string, name: string, token: string}) => void;
+  getUserInfo: (callbackInfo: UserInfo) => void;
 };
 
 export default function NaverCallback(props: naverCallback) {

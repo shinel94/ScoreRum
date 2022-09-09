@@ -11,14 +11,14 @@ export default function handler(
   res: NextApiResponse<Data>
 ) {
   if (req.method === "GET") {
-    readUser(req.query.id as string).then((result: UserInfo| undefined) => {
-      res.status(200).json({user: result});
+    return readUser(req.query.id as string).then((result: UserInfo| undefined) => {
+      return res.status(200).json({user: result});
     });
   }
   if (req.method === "POST") {
     const userInfo: UserInfo = JSON.parse(req.body)
-    writeUser(userInfo).then((result) => {
-      res.status(200).json({
+    return writeUser(userInfo).then((result) => {
+      return res.status(200).json({
         user: userInfo
       });
     });

@@ -15,7 +15,7 @@ export default function Login(props: loginProps) {
             window.localStorage.setItem('token', window.location.href.split('=')[1].split('&')[0]?? 'none');
             router.push('/');
         };
-    }, [])
+    }, [router])
 
     return (
         <div>
