@@ -1,0 +1,41 @@
+@font-face {
+  font-family: "circleL";
+  src: url("../public/static/fonts/thecircleL.ttf");
+}
+@font-face {
+  font-family: "circleM";
+  src: url("../public/static/fonts/thecircleM.ttf");
+}
+@font-face {
+  font-family: "michroma";
+  src: url("../public/static/fonts/Michroma-Regular.ttf");
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  --primary-color: #50f99c;
+  --primary-color-light: #7ef0b1;
+  --primary-color-dark: #2dbb6d;
+  font-family: 'michroma';
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    color: white;
+    background: black;
+  }
+}

@@ -9,12 +9,22 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mdi/js": "^7.0.96",
+    "@mdi/react": "^1.6.1",
+    "@passport-next/passport": "^3.1.0",
+    "firebase": "^9.9.4",
+    "mongodb": "^4.9.1",
     "next": "12.2.5",
+    "passport": "^0.6.0",
+    "passport-naver-v2": "^2.0.8",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "sass": "^1.54.8",
+    "vexflow": "^4.0.3"
   },
   "devDependencies": {
     "@types/node": "18.7.14",
+    "@types/passport": "^1.0.10",
     "@types/react": "18.0.18",
     "@types/react-dom": "18.0.6",
     "eslint": "8.23.0",
