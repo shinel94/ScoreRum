@@ -19,7 +19,7 @@ const Dashboard: NextPage<dashboardPropType, {}> = (props) => {
     if (!props.id || !props.email || !props.name) {
       router.push("/")
     } else {
-      setDashboardBody(<DashboardBody id={props.id} email={props.email} name={props.email} />)
+      setDashboardBody(<DashboardBody id={props.id} email={props.email} name={props.name} />)
     }
   }, [props, router])
   

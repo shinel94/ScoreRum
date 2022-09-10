@@ -1,9 +1,32 @@
-.dashboardBody {
-  width: 90rem;
-  height: 45rem;
-  margin: 2rem auto;
-
-  border-radius: 16px;
-  box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
-    rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+.dashboardHeader {
+  height: 4rem;
+  border-bottom: solid 3px var(--primary-color-light);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  .dashboardHeaderText {
+    width: 80%;
+    display: flex;
+    .pathTitle {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-right: 1rem;
+      span {
+        margin-left: 1rem;
+      }
+    }
+    .pathContent {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-top: auto;
+    }
+  }
+  .dashboardHeaderActions {
+    display: flex;
+    justify-content: space-between;
+    .dashboardHeaderButton {
+      margin-right: 3rem;
+      cursor: pointer;
+    }
+  }
 }
