@@ -1,0 +1,22 @@
+.scoreHeader {
+  height: 4rem;
+  border-bottom: solid 3px var(--primary-color-light);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  .scoredHeaderText {
+    width: 80%;
+    display: flex;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-right: 1rem;
+  }
+  .scoreHeaderActions {
+    display: flex;
+    justify-content: space-between;
+    .scoreHeaderButton {
+      margin-right: 3rem;
+      cursor: pointer;
+    }
+  }
+}

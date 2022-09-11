@@ -15,11 +15,14 @@ type dashboardPropType = {
 const Dashboard: NextPage<dashboardPropType, {}> = (props) => {
   const router = useRouter()
   const [dashboardBody, setDashboardBody] = useState<JSX.Element | undefined>(undefined)
+  const logoutEventHandler = () => {
+    router.push("/");
+  }
   useEffect(() => {
     if (!props.id || !props.email || !props.name) {
       router.push("/")
     } else {
-      setDashboardBody(<DashboardBody id={props.id} email={props.email} name={props.name} />)
+      setDashboardBody(<DashboardBody id={props.id} email={props.email} name={props.name} logoutHander={logoutEventHandler} />)
     }
   }, [props, router])
   
@@ -42,7 +45,6 @@ const Dashboard: NextPage<dashboardPropType, {}> = (props) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  console.log(context.query)
   return {
     props : {
       NAVER_CLIENT_ID: process.env.NAVER_CLIENT_ID ? process.env.NAVER_CLIENT_ID : '',

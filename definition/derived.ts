@@ -37,4 +37,7 @@ export class Score {
   public convertToString() {
     return "";
   }
+  public getNoteList() {
+    return []
+  }
 }

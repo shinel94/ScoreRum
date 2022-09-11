@@ -4,14 +4,15 @@ import styles from "./modal.module.scss";
 type ModalType = {
   open: boolean;
   modalCloseEventListener: () => void;
-  modalCreateEventListener: () => void;
+  eventButtonName: string;
+  eventButtonListener: () => void;
   header: string;
   children?: JSX.Element;
 };
 
 export const Modal = (props: ModalType) => {
   // 열기, 닫기, 모달 헤더 텍스트를 부모로부터 받아옴
-  const { open, modalCloseEventListener, modalCreateEventListener, header } =
+  const { open, modalCloseEventListener, eventButtonListener, header, eventButtonName } =
     props;
   return (
     // 모달이 열릴때 openModal 클래스가 생성된다.
@@ -36,9 +37,9 @@ export const Modal = (props: ModalType) => {
           <footer>
             <button
               className={styles.create}
-              onClick={modalCreateEventListener}
+              onClick={eventButtonListener}
             >
-              Create
+              {eventButtonName}
             </button>
             <button className="close" onClick={modalCloseEventListener}>
               close

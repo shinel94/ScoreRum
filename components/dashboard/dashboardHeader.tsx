@@ -10,6 +10,7 @@ type dashboardHeader = {
   basePath: string;
   setCreateDirectoryEventListener: () => void;
   setCreateScoreEventListener: () => void;
+  setUserInfoEventListener: () => void;
   returnToPrevious: () => void;
   deleteDirectoryEventListener: () => void;
 };
@@ -46,7 +47,10 @@ export default function DashboardHeader(props: dashboardHeader) {
         >
           <Icon path={mdiFileMusicOutline} size="2rem" />
         </div>
-        <div className={styles.dashboardHeaderButton}>
+        <div
+          className={styles.dashboardHeaderButton}
+          onClick={props.setUserInfoEventListener}
+        >
           <Icon path={mdiAccountCircle} size="2rem" />
         </div>
       </div>

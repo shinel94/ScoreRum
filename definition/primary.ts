@@ -11,3 +11,13 @@ export enum FileType {
   file = 940,
   directory = 526,
 }
+
+export type Length = {
+  value: string;
+  label: string;
+};
+
+export type Sound = {
+    value: string;
+    label: string;
+}

@@ -1,0 +1,99 @@
+.scoreController {
+  position: fixed;
+  right: 7rem;
+  top: 8rem;
+  
+}
+.scoreMinimized {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 1rem;
+    font-size: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-color: rgba(194, 255, 223, 0.567);
+    font-weight: 900;
+}
+
+.scoreMaximized {
+  width: 15rem;
+  height: 15rem;
+  background-color: rgba(194, 255, 223, 0.567);
+  box-shadow: var(--primary-color-light) 0px 1px 3px,
+    var(--primary-color) 0px 1px 2px;
+  
+  transition: all 0.5s;
+  padding: 0.5rem 0.3rem;
+  border-radius: 12px 12px 0 0;
+  font-size: 0.5rem;
+  &:hover {
+    padding: 0.5rem 0.5rem;
+    background-color: rgba(200, 249, 225, 0.729);
+    box-shadow: var(--primary-color) 0px 1px 3px,
+      var(--primary-color-dark) 0px 1px 2px;
+    transform: scale(1.2);
+  }
+  .scoreControllerHeader {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: dashed 1px #ff3cac;
+    text-align: center;
+    font-size: 0.75rem;
+    margin-bottom: 0.5rem;
+    padding: 0.2rem;
+    cursor: pointer;
+    span {
+      padding-left: 4rem;
+    }
+  }
+  .length {
+    label {
+      margin-right: 1rem;
+    }
+  }
+  .soundList {
+    box-shadow: var(--bright-gray) 0px 1px 3px, var(--dark-gray) 0px 1px 2px;
+    display: block;
+    margin: 0.2rem;
+    margin-top: 0.5rem;
+    background-color: var(--white);
+    .soundHeader {
+      padding: 0.3rem 0.5rem;
+    }
+    .soundLine {
+      display: flex;
+      justify-content: space-between;
+      .sound {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        width: 2.2rem;
+        height: 2.2rem;
+        border-radius: 1.1rem;
+        margin: 0.5rem 0.5rem;
+
+        background-color: rgba(200, 249, 225, 0.729);
+      }
+      .selectedSound {
+        background-color: var(--primary-color-light);
+      }
+    }
+  }
+  .soundActions {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.4rem 3rem;
+    div {
+      border: 1px solid var(--primary-color-dark);
+      padding: 0.2rem 0.3rem;
+      border-radius: 4px;
+      cursor: pointer;
+      &:hover {
+        background-color: var(--primary-color-light);
+      }
+    }
+  }
+}

@@ -18,6 +18,7 @@ type dashboardBodyType = {
   id: string;
   name: string;
   email: string;
+  logoutHander: () => void;
 };
 
 export default function DashboardBody(props: dashboardBodyType) {
@@ -26,6 +27,7 @@ export default function DashboardBody(props: dashboardBodyType) {
   const [isCreating, setIsCreating] = useState(false);
   const [isFileCreateModalShow, setIsFileCreateModalShow] = useState(false);
   const [isScoreCreateModalShow, setIsScoreCreateModalShow] = useState(false);
+  const [isUserInfoModalShow, setIsUserInfoModalShow] = useState(false);
   const [fileName, setFileName] = useState("");
   const [selectedFile, setSelectedFile] = useState<RumFile | undefined>(
     undefined
@@ -94,15 +96,34 @@ export default function DashboardBody(props: dashboardBodyType) {
       });
     }
   };
+  const deleteScoreEventListener = () => {
+    if (selectedFile === undefined) {
+      return;
+    }
+    deleteFile(props.id, selectedFile.name, selectedFile.basePath).then(() => {
+      setFileList(
+        fileList.filter((file) => {
+          return file.fileId !== (selectedFile ? selectedFile.fileId : "");
+        })
+      );
+      setSelectedFile(undefined);
+      setSelectedScore(undefined);
+    });
+  };
+
+  const scoreCloseEventListener = () => {
+    setSelectedFile(undefined);
+    setSelectedScore(undefined);
+  };
 
   useEffect(() => {
     fetchFileList(basePathList.join("/"));
   }, [fetchFileList, basePathList]);
 
   return (
-    <div className={styles.dashboardBody}>
+    <div>
       {selectedScore === undefined || selectedFile === undefined ? (
-        <>
+        <div className={styles.dashboard}>
           <DashboardHeader
             basePath={basePathList.join(" / ")}
             setCreateDirectoryEventListener={() => {
@@ -112,6 +133,9 @@ export default function DashboardBody(props: dashboardBodyType) {
             setCreateScoreEventListener={() => {
               setFileName("");
               setIsScoreCreateModalShow(true);
+            }}
+            setUserInfoEventListener={() => {
+              setIsUserInfoModalShow(true);
             }}
             returnToPrevious={returnToPrevious}
             deleteDirectoryEventListener={deleteDirectoryEventListener}
@@ -131,20 +155,23 @@ export default function DashboardBody(props: dashboardBodyType) {
               modalCloseEventListener={() => {
                 setIsFileCreateModalShow(false);
               }}
-              modalCreateEventListener={() => {
+              eventButtonName="create"
+              eventButtonListener={() => {
                 createFileEventListener(FileType.directory);
               }}
             >
               <div className={styles.modalBody}>
-                <label>Name</label>
-                <input
-                  onChange={(event) => {
-                    event.target.value = event.target.value
-                      .replaceAll("/", "")
-                      .replaceAll("\\", "");
-                    setFileName(event.target.value);
-                  }}
-                />
+                <div>
+                  <label>Name</label>
+                  <input
+                    onChange={(event) => {
+                      event.target.value = event.target.value
+                        .replaceAll("/", "")
+                        .replaceAll("\\", "");
+                      setFileName(event.target.value);
+                    }}
+                  />
+                </div>
               </div>
             </Modal>
             <Modal
@@ -153,29 +180,62 @@ export default function DashboardBody(props: dashboardBodyType) {
               modalCloseEventListener={() => {
                 setIsScoreCreateModalShow(false);
               }}
-              modalCreateEventListener={() => {
+              eventButtonName="create"
+              eventButtonListener={() => {
                 createFileEventListener(FileType.file);
               }}
             >
               <div className={styles.modalBody}>
-                <label>Name</label>
-                <input
-                  onChange={(event) => {
-                    event.target.value = event.target.value
-                      .replaceAll("/", "")
-                      .replaceAll("\\", "");
-                    setFileName(event.target.value);
-                  }}
-                />
+                <div>
+                  <label>Name</label>
+                  <input
+                    onChange={(event) => {
+                      event.target.value = event.target.value
+                        .replaceAll("/", "")
+                        .replaceAll("\\", "");
+                      setFileName(event.target.value);
+                    }}
+                  />
+                </div>
+              </div>
+            </Modal>
+            <Modal
+              header="UserInfo"
+              open={isUserInfoModalShow}
+              modalCloseEventListener={() => {
+                setIsUserInfoModalShow(false);
+              }}
+              eventButtonName="Logout"
+              eventButtonListener={() => {
+                props.logoutHander();
+              }}
+            >
+              <div className={styles.modalBody}>
+                <div>
+                  <label>Name</label>
+                  <input readOnly value={props.name} />
+                </div>
+                <div>
+                  <label>Email</label>
+                  <input readOnly value={props.email} />
+                </div>
               </div>
             </Modal>
           </section>
-        </>
+        </div>
       ) : (
-        <>
-          <ScoreHeader file={selectedFile} score={selectedScore} />
+        <div className={styles.score}>
+          <ScoreHeader
+            file={selectedFile}
+            score={selectedScore}
+            scoreDeleteEventListener={deleteScoreEventListener}
+            retrunEventListener={scoreCloseEventListener}
+            shareEventListener={() => {
+              alert("Developing Score share");
+            }}
+          />
           <ScoreBody file={selectedFile} score={selectedScore} />
-        </>
+        </div>
       )}
     </div>
   );

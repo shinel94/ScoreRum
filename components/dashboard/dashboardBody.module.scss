@@ -1,4 +1,4 @@
-.dashboardBody {
+.dashboard {
   width: 90rem;
   height: 45rem;
   margin: 2rem auto;
@@ -8,8 +8,24 @@
     rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
 }
 
+.score {
+  width: 90rem;
+  height: 45rem;
+  margin: 2rem auto;
+  overflow-y: scroll;
+  border-radius: 16px;
+  box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
+    rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+  
+}
+
 .modalBody {
-  label {
-    margin-right: 1rem;
+  div {
+    display: flex;
+    padding: 0.25rem;
+    label {
+      margin-right: 1rem;
+      width: 7rem;
+    }
   }
 }

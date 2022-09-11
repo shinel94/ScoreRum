@@ -154,6 +154,7 @@ export async function deleteFile(
       sort: {},
     };
     const file = await files.findOne(query, options);
+    console.log(file)
    if (file) {
       await files.deleteOne({ _id: file._id });
       if (file.fileType === FileType.file) {
