@@ -58,12 +58,8 @@ export default function ScoreController(props: scoreControllerType) {
       label: "MT",
       value: "d/5",
     },
-    lowTom: {
-      label: "MT",
-      value: "a/4",
-    },
     floorTom: {
-      label: "LT",
+      label: "FT",
       value: "f/4",
     },
     base: {
@@ -119,7 +115,7 @@ export default function ScoreController(props: scoreControllerType) {
           selectDrumSound(soundList.middleTom.value);
           return;
         case "KeyC":
-          selectDrumSound(soundList.lowTom.value);
+          selectDrumSound(soundList.floorTom.value);
           return;
         case "KeyV":
           selectDrumSound(soundList.base.value);
@@ -277,15 +273,15 @@ export default function ScoreController(props: scoreControllerType) {
                 className={
                   styles.sound +
                   " " +
-                  (selectedSoundList.indexOf(soundList.lowTom.value) !== -1
+                  (selectedSoundList.indexOf(soundList.floorTom.value) !== -1
                     ? styles.selectedSound
                     : "")
                 }
                 onClick={() => {
-                  selectDrumSound(soundList.lowTom.value);
+                  selectDrumSound(soundList.floorTom.value);
                 }}
               >
-                {soundList.lowTom.label}
+                {soundList.floorTom.label}
               </div>
               <div
                 className={
