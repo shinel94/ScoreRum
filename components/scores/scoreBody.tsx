@@ -3,35 +3,70 @@ import Vex from "vexflow";
 import { RumFile, Score } from "../../definition/derived";
 import { useEffect, useState } from "react";
 import ScoreController from "./scoreController";
+import ScoreHeader from "./scoreHeader";
+import { updateScoreContent } from "../../clientAPI/dashboard";
 
 type scoreBodyType = {
   file: RumFile;
   score: Score;
+  deleteScoreEventListener: () => void;
+  scoreCloseEventListener: () => void;
 };
 
-const { Renderer, Stave, StaveNote, Formatter } = Vex.Flow;
+const { Renderer, Stave, StaveNote, Formatter, Beam } = Vex.Flow;
 
 export default function ScoreBody(props: scoreBodyType) {
-  const [pageNum, setPageNum] = useState(1);
-  const [staveNum, setStaveNum] = useState(12);
-  // const [noteList, setNoteList] = useState(props.score.getNoteList());
+  const staveNum = 12;
+  const [pageNum, setPageNum] = useState(0);
 
-  const [noteList, setNoteList] = useState<Vex.StaveNote[]>([]);
+  const [scoreNoteList, setScoreNoteList] = useState<Vex.StaveNote[][]>(
+    props.score.getScoreNoteList()
+  );
+
+  const [pageNoteList, setPageNoteList] = useState<Vex.StaveNote[]>(
+    scoreNoteList[pageNum]
+  );
 
   const addNoteEventListener = (keyList: string[], duration: string) => {
     if (keyList.length === 0) {
       return;
     }
-    setNoteList([
-      ...noteList,
+    scoreNoteList[pageNum] = [
+      ...scoreNoteList[pageNum],
       new StaveNote({ keys: keyList, duration: duration }),
-    ]);
+    ];
+    setScoreNoteList(scoreNoteList);
+    setPageNoteList(scoreNoteList[pageNum]);
   };
 
   const deleteNoteEventListener = () => {
-    setNoteList([...noteList.slice(0, noteList.length - 1)]);
-    console.log(noteList)
+    scoreNoteList[pageNum] = scoreNoteList[pageNum].slice(
+      0,
+      scoreNoteList[pageNum].length - 1
+    );
+    setScoreNoteList(scoreNoteList);
+    setPageNoteList(scoreNoteList[pageNum]);
   };
+
+  const nextPage = () => {
+    setPageNum(pageNum + 1);
+  };
+  const prevPage = () => {
+    setPageNum(pageNum > 0 ? pageNum - 1 : pageNum);
+  };
+
+  const saveScoreEventHandler = () => {
+    props.score.noteList = scoreNoteList;
+    updateScoreContent(props.score.scoreId, props.score.toContent());
+  };
+
+  useEffect(() => {
+    if (scoreNoteList.length < pageNum + 1) {
+      scoreNoteList.push([]);
+      setScoreNoteList([...scoreNoteList]);
+    }
+    setPageNoteList(scoreNoteList[pageNum]);
+  }, [pageNum]);
 
   useEffect(() => {
     const targetElement = document.getElementsByClassName(
@@ -65,11 +100,32 @@ export default function ScoreBody(props: scoreBodyType) {
           stave.setContext(context).draw();
 
           let sNowLength = 4;
-          let sNowNoteList = [];
-          while (sSelectedNoteIdx < noteList.length && sNowLength > 0) {
-            sNowLength -=
-              4 / parseInt(noteList[sSelectedNoteIdx].getDuration());
-            sNowNoteList.push(noteList[sSelectedNoteIdx]);
+          let sNowNoteList: Vex.StaveNote[] = [];
+          let sConnectedNoteList: Vex.StaveNote | Vex.StemmableNote[] = [];
+          let sBeamNoteList: Vex.Beam[] = [];
+          while (sSelectedNoteIdx < pageNoteList.length && sNowLength > 0) {
+            const sDuration =
+              4 / parseInt(pageNoteList[sSelectedNoteIdx].getDuration());
+
+            sNowNoteList.push(pageNoteList[sSelectedNoteIdx]);
+            sConnectedNoteList.push(pageNoteList[sSelectedNoteIdx]);
+            sNowLength -= sDuration;
+            if (sDuration > 1) {
+              sConnectedNoteList.splice(0, sConnectedNoteList.length);
+            } else {
+              if (pageNoteList[sSelectedNoteIdx].getNoteType() === "r") {
+                sConnectedNoteList.splice(0, sConnectedNoteList.length);
+              } else if (sNowLength - Math.floor(sNowLength) === 0) {
+                sBeamNoteList.push(
+                  ...Beam.generateBeams(
+                    sConnectedNoteList.splice(0, sConnectedNoteList.length),
+                    { stem_direction: 1 }
+                  )
+                );
+              }
+            }
+
+            //
             sSelectedNoteIdx += 1;
           }
           while (sNowNoteList.length !== 0 && sNowLength < 4) {
@@ -99,23 +155,40 @@ export default function ScoreBody(props: scoreBodyType) {
             sNowNoteList.push(
               new StaveNote({ keys: ["c/5"], duration: `${restLength}r` })
             );
-            console.log(sNowLength);
           }
           if (sNowNoteList.length !== 0) {
             Formatter.FormatAndDraw(context, stave, sNowNoteList);
+            sBeamNoteList.forEach((beam) => {
+              beam.setContext(context).draw();
+            });
           }
         }
       }
     }
-  }, [staveNum, noteList]);
+  }, [staveNum, pageNoteList]);
 
   return (
-    <>
+    <div className={styles.score}>
+      <ScoreHeader
+        file={props.file}
+        score={props.score}
+        scoreDeleteEventListener={props.deleteScoreEventListener}
+        retrunEventListener={props.scoreCloseEventListener}
+        shareEventListener={() => {
+          alert("Developing Score share");
+        }}
+        saveEventListener={saveScoreEventHandler}
+      />
+      <div
+        className={styles.socrePage + " u-nondraggable"}
+      >{`- Page ${pageNum} - `}</div>
       <div className={styles.scoreBody} />
       <ScoreController
         addSoundEventListener={addNoteEventListener}
         deleteSoundEventListener={deleteNoteEventListener}
+        nextPage={nextPage}
+        prevPage={prevPage}
       />
-    </>
+    </div>
   );
 }

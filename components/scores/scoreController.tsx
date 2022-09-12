@@ -9,6 +9,8 @@ import { mdiMinus } from "@mdi/js";
 type scoreControllerType = {
   addSoundEventListener: (keyList: string[], duration: string) => void;
   deleteSoundEventListener: () => void;
+  nextPage: () => void;
+  prevPage: () => void;
 };
 
 type drumSound = {
@@ -18,7 +20,6 @@ type drumSound = {
   snare: Sound;
   highTom: Sound;
   middleTom: Sound;
-  lowTom: Sound;
   floorTom: Sound;
   base: Sound;
 };
@@ -70,6 +71,7 @@ export default function ScoreController(props: scoreControllerType) {
   const [selectedLengthIdx, setSelectedLengthIdx] = useState(0);
   const [selectedSoundList, setSelectedSoundList] = useState<string[]>([]);
   const [isMinimize, setIsMinimize] = useState(false);
+  const [isSelectedRestNote, setIsSelectedRestNote] = useState(false);
   const selectDrumSound = (soundValue: string) => {
     if (selectedSoundList.indexOf(soundValue) !== -1) {
       setSelectedSoundList(
@@ -85,6 +87,16 @@ export default function ScoreController(props: scoreControllerType) {
     let nowIdx = selectedLengthIdx;
     const keyboardClickEvent = (event: KeyboardEvent) => {
       switch (event.code) {
+        case "PageUp":
+          props.nextPage();
+          event.preventDefault();
+
+          return;
+        case "PageDown":
+          props.prevPage();
+          event.preventDefault();
+
+          return;
         case "KeyQ":
           nowIdx = nowIdx - 1;
           nowIdx = nowIdx < 0 ? 0 : nowIdx;
@@ -95,6 +107,9 @@ export default function ScoreController(props: scoreControllerType) {
           nowIdx =
             nowIdx > lengthList.length - 1 ? lengthList.length - 1 : nowIdx;
           setSelectedLengthIdx(nowIdx);
+          return;
+        case "KeyR":
+          setIsSelectedRestNote(!isSelectedRestNote);
           return;
         case "KeyA":
           selectDrumSound(soundList.hihat.value);
@@ -124,7 +139,11 @@ export default function ScoreController(props: scoreControllerType) {
           setIsMinimize(!isMinimize);
           return;
         case "NumpadAdd":
-          props.addSoundEventListener(selectedSoundList, lengthList[selectedLengthIdx].value);
+          props.addSoundEventListener(
+            isSelectedRestNote ? ["c/5"] : selectedSoundList,
+            lengthList[selectedLengthIdx].value +
+              (isSelectedRestNote ? "r" : "")
+          );
           return;
         case "NumpadSubtract":
           props.deleteSoundEventListener();
@@ -136,18 +155,26 @@ export default function ScoreController(props: scoreControllerType) {
     return () => {
       window.removeEventListener("keydown", keyboardClickEvent);
     };
-  }, [selectedLengthIdx, selectedSoundList, isMinimize, props]);
+  }, [
+    selectedLengthIdx,
+    selectedSoundList,
+    isMinimize,
+    isSelectedRestNote,
+    props,
+  ]);
 
   return (
-    <div className={styles.scoreController} onMouseEnter={() => {
-      setIsMinimize(false)
-    }} onMouseLeave={() => {
-      setIsMinimize(true)
-    }}>
+    <div
+      className={styles.scoreController}
+      onMouseEnter={() => {
+        setIsMinimize(false);
+      }}
+      onMouseLeave={() => {
+        setIsMinimize(true);
+      }}
+    >
       {isMinimize ? (
-        <div className={styles.scoreMinimized}>
-          C
-        </div>
+        <div className={styles.scoreMinimized}>C</div>
       ) : (
         <div className={styles.scoreMaximized}>
           <div
@@ -161,22 +188,33 @@ export default function ScoreController(props: scoreControllerType) {
               <Icon path={mdiMinus} size="1rem" />
             </div>
           </div>
-          <div className={styles.length + " u-nondraggable"}>
-            <label>Length</label>
-            <select
-              value={selectedLengthIdx.toString()}
-              onChange={(event) => {
-                setSelectedLengthIdx(Number.parseInt(event.target.value));
+          <div className={styles.optionLine}>
+            <div className={styles.length + " u-nondraggable"}>
+              <label>Length</label>
+              <select
+                value={selectedLengthIdx.toString()}
+                onChange={(event) => {
+                  setSelectedLengthIdx(Number.parseInt(event.target.value));
+                }}
+              >
+                {lengthList.map((length, index) => {
+                  return (
+                    <option key={length.label} value={index}>
+                      {length.label}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+            <div
+              className={styles.rest}
+              onClick={() => {
+                setIsSelectedRestNote(!isSelectedRestNote);
               }}
             >
-              {lengthList.map((length, index) => {
-                return (
-                  <option key={length.label} value={index}>
-                    {length.label}
-                  </option>
-                );
-              })}
-            </select>
+              <label>Rest</label>
+              <input type={"checkbox"} checked={isSelectedRestNote} />
+            </div>
           </div>
           <div className={styles.soundList}>
             <div className={styles.soundHeader + " u-nondraggable"}>
@@ -300,7 +338,15 @@ export default function ScoreController(props: scoreControllerType) {
             </div>
           </div>
           <div className={styles.soundActions}>
-            <div onClick={() => {props.addSoundEventListener(selectedSoundList, lengthList[selectedLengthIdx].value)}}>
+            <div
+              onClick={() => {
+                props.addSoundEventListener(
+                  isSelectedRestNote ? ["c/5"] : selectedSoundList,
+                  lengthList[selectedLengthIdx].value +
+                    (isSelectedRestNote ? "r" : "")
+                );
+              }}
+            >
               <Icon path={mdiMusicNotePlus} size="1rem" />
               ADD
             </div>

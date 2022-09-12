@@ -7,7 +7,7 @@ const uri =
 export async function writeUser(userInfo: UserInfo) {
   const client = new MongoClient(uri);
   try {
-    await client.connect()
+    await client.connect();
     const database = client.db("score-rum");
     const users = database.collection("users");
     const result = await users.insertOne({
@@ -28,7 +28,7 @@ export async function writeUser(userInfo: UserInfo) {
 export async function readUser(userId: string) {
   const client = new MongoClient(uri);
   try {
-    await client.connect()
+    await client.connect();
     const database = client.db("score-rum");
     const users = database.collection("users");
     const query = { id: userId };
@@ -58,7 +58,7 @@ export async function readUser(userId: string) {
 export async function getFileList(userId: string, basePath: string) {
   const client = new MongoClient(uri);
   try {
-    await client.connect()
+    await client.connect();
     const database = client.db("score-rum");
     const files = database.collection("files");
     const query = { userId: userId, basePath: basePath, isDeleted: false };
@@ -85,7 +85,7 @@ export async function createFile(
 ) {
   const client = new MongoClient(uri);
   try {
-    await client.connect()
+    await client.connect();
     const database = client.db("score-rum");
     let scoreId = "";
     if (fileType === FileType.file) {
@@ -113,14 +113,14 @@ export async function createFile(
   }
 }
 
-export async function updateFile(fileId: string, content: string) {
+export async function updateScore(scoreId: string, content: string) {
   const client = new MongoClient(uri);
   try {
-    await client.connect()
+    await client.connect();
     const database = client.db("score-rum");
-    const files = database.collection("files");
+    const files = database.collection("scores");
     // create a filter for a movie to update
-    const filter = { fileId: fileId };
+    const filter = { _id: new ObjectId(scoreId) };
     // this option instructs the method to create a document if no documents match the filter
     const options = {};
     // create a document that sets the plot of the movie
@@ -143,7 +143,7 @@ export async function deleteFile(
 ) {
   const client = new MongoClient(uri);
   try {
-    await client.connect()
+    await client.connect();
     const database = client.db("score-rum");
     const files = database.collection("files");
     // create a filter for a movie to update
@@ -154,8 +154,7 @@ export async function deleteFile(
       sort: {},
     };
     const file = await files.findOne(query, options);
-    console.log(file)
-   if (file) {
+    if (file) {
       await files.deleteOne({ _id: file._id });
       if (file.fileType === FileType.file) {
         const scores = database.collection("scores");
@@ -170,7 +169,7 @@ export async function deleteFile(
 export async function getFileContent(scoreId: string) {
   const client = new MongoClient(uri);
   try {
-    await client.connect()
+    await client.connect();
     const database = client.db("score-rum");
     const files = database.collection("scores");
     // create a filter for a movie to update

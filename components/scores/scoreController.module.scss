@@ -2,19 +2,18 @@
   position: fixed;
   right: 7rem;
   top: 8rem;
-  
 }
 .scoreMinimized {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 1rem;
-    font-size: 0.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    background-color: rgba(194, 255, 223, 0.567);
-    font-weight: 900;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 1rem;
+  font-size: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background-color: rgba(194, 255, 223, 0.567);
+  font-weight: 900;
 }
 
 .scoreMaximized {
@@ -23,7 +22,7 @@
   background-color: rgba(194, 255, 223, 0.567);
   box-shadow: var(--primary-color-light) 0px 1px 3px,
     var(--primary-color) 0px 1px 2px;
-  
+
   transition: all 0.5s;
   padding: 0.5rem 0.3rem;
   border-radius: 12px 12px 0 0;
@@ -48,9 +47,23 @@
       padding-left: 4rem;
     }
   }
-  .length {
-    label {
-      margin-right: 1rem;
+  .optionLine {
+    display: flex;
+    justify-content: space-between;
+    .length {
+      display: flex;
+      label {
+        margin-right: 1rem;
+      }
+      select {
+        width: 3rem;
+      }
+    }
+    .rest {
+      display: flex;
+      label {
+        margin-right: 1rem;
+      }
     }
   }
   .soundList {
@@ -59,6 +72,7 @@
     margin: 0.2rem;
     margin-top: 0.5rem;
     background-color: var(--white);
+
     .soundHeader {
       padding: 0.3rem 0.5rem;
     }

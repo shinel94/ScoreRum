@@ -8,6 +8,7 @@ import {
 import { RumFile, Score } from "../../definition/derived";
 import { FileType } from "../../definition/primary";
 import { Modal } from "../modal/modal";
+import { StaveNote } from "vexflow";
 import ScoreBody from "../scores/scoreBody";
 import ScoreHeader from "../scores/scoreHeader";
 import styles from "./dashboardBody.module.scss";
@@ -225,16 +226,12 @@ export default function DashboardBody(props: dashboardBodyType) {
         </div>
       ) : (
         <div className={styles.score}>
-          <ScoreHeader
+          <ScoreBody
             file={selectedFile}
             score={selectedScore}
-            scoreDeleteEventListener={deleteScoreEventListener}
-            retrunEventListener={scoreCloseEventListener}
-            shareEventListener={() => {
-              alert("Developing Score share");
-            }}
+            deleteScoreEventListener={deleteScoreEventListener}
+            scoreCloseEventListener={scoreCloseEventListener}
           />
-          <ScoreBody file={selectedFile} score={selectedScore} />
         </div>
       )}
     </div>

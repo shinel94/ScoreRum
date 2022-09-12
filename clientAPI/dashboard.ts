@@ -1,4 +1,3 @@
-import { ObjectId } from "mongodb";
 import { RumFile, Score } from "../definition/derived";
 import { FileType } from "../definition/primary";
 
@@ -90,7 +89,7 @@ export const updateFile: (fileId: string, content: string) => Promise<void> = (
 export const deleteFile: (
   userId: string,
   fileName: string,
-  basePath: string,
+  basePath: string
 ) => Promise<void> = (userId, fileName, basePath) => {
   const url = new URL(window.location.origin + "/api/files");
   const params = new URLSearchParams(url.search);
@@ -116,9 +115,9 @@ export const deleteFile: (
     });
 };
 
-export const getScoreContent: (scoreId: string) => Promise<Score | undefined> = (
-  scoreId
-) => {
+export const getScoreContent: (
+  scoreId: string
+) => Promise<Score | undefined> = (scoreId) => {
   const url = new URL(window.location.origin + "/api/files/content");
   const params = new URLSearchParams(url.search);
   params.set("score_id", scoreId);
@@ -129,7 +128,34 @@ export const getScoreContent: (scoreId: string) => Promise<Score | undefined> = 
     .then((response) => {
       if (response.ok) {
         return response.json().then((data) => {
-          return new Score(scoreId, data.content);
+          return Score.fromContent(scoreId, data.content);
+        });
+      } else {
+        return undefined;
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      return undefined;
+    });
+};
+
+export const updateScoreContent: (
+  scoreId: string,
+  scoreContent: string
+) => Promise<void> = (scoreId, scoreContent) => {
+  const url = new URL(window.location.origin + "/api/files/content");
+  return fetch(url.toString(), {
+    method: "POST",
+    body: JSON.stringify({
+      score_id: scoreId,
+      score_content: scoreContent,
+    }),
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.json().then((data) => {
+          console.log(data);
         });
       } else {
         return undefined;
