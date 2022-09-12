@@ -36,7 +36,6 @@ export async function readUser(userId: string) {
       sort: {},
     };
     const user = await users.findOne(query, options);
-    // since this method returns the matched document, not a cursor, print it directly
     client.close();
     if (user) {
       return {
