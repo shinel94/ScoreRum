@@ -6,8 +6,9 @@ import { mdiMusicNoteEighth } from "@mdi/js";
 import Login from "../components/login";
 
 type homePropType = {
-  NAVER_CLIENT_ID: string
-}
+  NAVER_CLIENT_ID: string;
+  CALLBACK_URL: string;
+};
 
 const Home: NextPage<homePropType, {}> = (props) => {
   return (
@@ -27,7 +28,10 @@ const Home: NextPage<homePropType, {}> = (props) => {
           <h1>Score Rum</h1>
         </div>
         <div className={styles.loginButtonWrapper}>
-          <Login NAVER_CLIENT_ID={props.NAVER_CLIENT_ID}/>
+          <Login
+            NAVER_CLIENT_ID={props.NAVER_CLIENT_ID}
+            CALLBACK_URL={props.CALLBACK_URL}
+          />
         </div>
       </main>
     </div>
@@ -36,11 +40,15 @@ const Home: NextPage<homePropType, {}> = (props) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
-    props : {
-      NAVER_CLIENT_ID: process.env.NAVER_CLIENT_ID ? process.env.NAVER_CLIENT_ID : ''
-    }
-    
-  }
-}
+    props: {
+      NAVER_CLIENT_ID: process.env.NAVER_CLIENT_ID
+        ? process.env.NAVER_CLIENT_ID
+        : "",
+      CALLBACK_URL: process.env.NAVER_LOGIN_CALLBACK_URL
+        ? process.env.NAVER_LOGIN_CALLBACK_URL
+        : "",
+    },
+  };
+};
 
 export default Home;

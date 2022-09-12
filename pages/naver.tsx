@@ -13,36 +13,37 @@ const NaverCallbackPage: NextPage<naverCallbackePropType, {}> = (props) => {
   const [userInfo, setUserInfo] = useState<UserInfo | undefined>(undefined);
   const content = JSON.stringify(userInfo);
   const getUserInfoById: (callbackInfo: UserInfo) => void = (callbackInfo) => {
-    getUserInfo(callbackInfo.id)
-      .then((aUserInfo) => {
-        if (aUserInfo === undefined) {
-            postUser({
-                id: callbackInfo.id,
-                name: callbackInfo.name,
-                age: callbackInfo.age,
-                email: callbackInfo.email,
-                gender: callbackInfo.gender,
-                token: callbackInfo.token
-            })
-            setUserInfo({
-              id: callbackInfo.id,
-              name: callbackInfo.name,
-              age: callbackInfo.age,
-              email: callbackInfo.email,
-              gender: callbackInfo.gender,
-              token: callbackInfo.token
-          })
-        } else {
-            setUserInfo(aUserInfo);
-        }
-        
-      })
+    getUserInfo(callbackInfo.id).then((aUserInfo) => {
+      if (aUserInfo === undefined) {
+        postUser({
+          id: callbackInfo.id,
+          name: callbackInfo.name,
+          age: callbackInfo.age,
+          email: callbackInfo.email,
+          gender: callbackInfo.gender,
+          token: callbackInfo.token,
+        });
+        setUserInfo({
+          id: callbackInfo.id,
+          name: callbackInfo.name,
+          age: callbackInfo.age,
+          email: callbackInfo.email,
+          gender: callbackInfo.gender,
+          token: callbackInfo.token,
+        });
+      } else {
+        setUserInfo(aUserInfo);
+      }
+    });
   };
   useEffect(() => {
     if (userInfo !== undefined) {
-      router.push(`/dashboard?id=${userInfo.id}&name=${userInfo.name}&email=${userInfo.email}`, "/dashboard");
+      router.push(
+        `/dashboard?id=${userInfo.id}&name=${userInfo.name}&email=${userInfo.email}`,
+        "/dashboard"
+      );
     }
-  }, [userInfo, router])
+  }, [userInfo, router]);
   return (
     <div>
       <NaverCallback
