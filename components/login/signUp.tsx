@@ -1,5 +1,5 @@
-const SignUp = () => {
+import styles from "./signUp.module.scss";
 
-}
+const SignUp = () => {};
 
-export default SignUp
+export default SignUp;
