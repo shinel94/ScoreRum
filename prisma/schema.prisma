@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Files {
+  id        Int     @id @default(autoincrement())
+  userId    Int
+  basePath  String
+  fileName  String
+  fileType  Int
+  scoreId   Int
+  isDeleted Boolean
+}
+
+model Score {
+  id       Int    @id @default(autoincrement())
+  fileId   Int
+  fileName String
+  content  String
+}
+
+model Comment {
+  id       Int    @id @default(autoincrement())
+  scoreId  Int
+  scoreIdx Int
+  content  String
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  loginName   String
+  password    String
+  nickName    String
+  email       String
+  token       String
+  hash        String
+  createDate  DateTime
+  isEmailAuth String
+  isDeleted   Boolean
+}
