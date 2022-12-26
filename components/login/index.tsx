@@ -1,15 +1,14 @@
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import styles from "./index.module.scss";
 
-import LoginNaver from "./naver";
+import SignIn from "./signIn";
 
-type loginProps = {
-  NAVER_CLIENT_ID: string;
-  CALLBACK_URL: string;
-};
+type loginProps = {};
 
 export default function Login(props: loginProps) {
   const router = useRouter();
+  const [showLogin, setShowLogin] = useState(true);
 
   useEffect(() => {
     if (window.location.href.includes("access_token")) {
@@ -22,11 +21,19 @@ export default function Login(props: loginProps) {
   }, [router]);
 
   return (
-    <div>
-      <LoginNaver
-        NAVER_CLIENT_ID={props.NAVER_CLIENT_ID}
-        CALLBACK_URL={props.CALLBACK_URL}
-      ></LoginNaver>
-    </div>
+    <>
+      {showLogin ? <SignIn /> : <></>}
+      <div className={styles.signText}>
+        {showLogin ? (
+          <div onClick={() => {setShowLogin(false)}}>
+            계정이 없으신가요? <span>생성</span>
+          </div>
+        ) : (
+          <div onClick={() => {setShowLogin(true)}}>
+            로그인 화면 <span>돌아가기</span>
+          </div>
+        )}
+      </div>
+    </>
   );
 }

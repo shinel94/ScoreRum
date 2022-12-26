@@ -29,8 +29,6 @@ const Home: NextPage<homePropType, {}> = (props) => {
         </div>
         <div className={styles.loginButtonWrapper}>
           <Login
-            NAVER_CLIENT_ID={props.NAVER_CLIENT_ID}
-            CALLBACK_URL={props.CALLBACK_URL}
           />
         </div>
       </main>
