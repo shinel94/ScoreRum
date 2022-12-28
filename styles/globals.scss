@@ -22,7 +22,9 @@ body {
   --medium-gray: #454545;
   --bright-gray: #959595;
   --white: #f0f0f0;
-  font-family: 'michroma';
+  --valid-color: rgb(47, 82, 254);
+  --invalid-color: rgb(226, 96, 96);
+  font-family: "michroma";
 }
 
 a {
@@ -51,4 +53,22 @@ a {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+@keyframes invalid-vibrate {
+  0% {
+    transform: translateX(2px);
+  }
+  25% {
+    transform: translateX(-2px);
+  }
+  50% {
+    transform: translateX(2px);
+  }
+  75% {
+    transform: translateX(-2px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }

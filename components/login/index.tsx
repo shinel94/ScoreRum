@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import styles from "./index.module.scss";
 
 import SignIn from "./signIn";
+import SignUp from "./signUp";
 
 type loginProps = {};
 
@@ -22,14 +23,22 @@ export default function Login(props: loginProps) {
 
   return (
     <>
-      {showLogin ? <SignIn /> : <></>}
+      {showLogin ? <SignIn /> : <SignUp />}
       <div className={styles.signText}>
         {showLogin ? (
-          <div onClick={() => {setShowLogin(false)}}>
+          <div
+            onClick={() => {
+              setShowLogin(false);
+            }}
+          >
             계정이 없으신가요? <span>생성</span>
           </div>
         ) : (
-          <div onClick={() => {setShowLogin(true)}}>
+          <div
+            onClick={() => {
+              setShowLogin(true);
+            }}
+          >
             로그인 화면 <span>돌아가기</span>
           </div>
         )}
