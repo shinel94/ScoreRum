@@ -1,5 +1,6 @@
+import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { getIsExistId } from "../../clientAPI/auth";
+import { getIsExistId, postCreateUser } from "../../clientAPI/auth";
 import { isEmail } from "../../utils/regex";
 import styles from "./signUp.module.scss";
 
@@ -10,6 +11,7 @@ const SignUp = () => {
   const [pwdInput, setPwdInput] = useState("");
   const [nickNameInput, setNickNameInput] = useState("");
   const [emailInput, setEmailInput] = useState("");
+  const router = useRouter();
 
   const [validate, setValidate] = useState({
     id: false,
@@ -27,21 +29,23 @@ const SignUp = () => {
 
   useEffect(() => {
     clearTimeout(buffer);
-    buffer = setTimeout(() => {
-      getIsExistId(idInput).then((exist) => {
-        if (exist) {
-          idExistMessageRef.current?.classList.remove("u-hide");
-        } else {
-          idExistMessageRef.current?.classList.add("u-hide");
-          setValidate((prev) => {
-            return {
-              ...prev,
-              id: true,
-            };
-          });
-        }
+    if (idInput.length > 0) {
+      buffer = setTimeout(() => {
+        getIsExistId(idInput).then((exist) => {
+          if (exist) {
+            idExistMessageRef.current?.classList.remove("u-hide");
+          } else {
+            idExistMessageRef.current?.classList.add("u-hide");
+            setValidate((prev) => {
+              return {
+                ...prev,
+                id: true,
+              };
+            });
+          }
+        });
       });
-    });
+    }
   }, [idInput]);
 
   useEffect(() => {
@@ -93,7 +97,18 @@ const SignUp = () => {
     }
   }, [pwdInput]);
 
-  const signUp = () => {};
+  const signUp = () => {
+    if (isValidate) {
+      postCreateUser(idInput, pwdInput, nickNameInput, emailInput).then(
+        (userInfo) => {
+          console.log(userInfo);
+          router.push(
+            `/dashboard?id=${userInfo.dbId}&name=${userInfo.nickName}&email=${userInfo.email}&auth=${userInfo.isEmailAuth}&loginName=${userInfo.loginName}`
+          );
+        }
+      );
+    }
+  };
   return (
     <div className={styles.formWrapper}>
       <div className={styles.inputWrapper}>

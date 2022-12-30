@@ -1,9 +1,9 @@
 export type UserInfo = {
-  id: string;
-  age: string;
-  gender: string;
+  dbId: number;
+  loginName: string;
+  nickName: string;
   email: string;
-  name: string;
+  isEmailAuth: boolean;
   token: string;
 };
 
@@ -18,6 +18,6 @@ export type Length = {
 };
 
 export type Sound = {
-    value: string;
-    label: string;
-}
+  value: string;
+  label: string;
+};

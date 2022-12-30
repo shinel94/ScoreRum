@@ -42,7 +42,7 @@ model User {
   email       String
   token       String?
   hash        String?
-  createDate  DateTime
+  createDate  DateTime @default(now())
   isEmailAuth Boolean
   isDeleted   Boolean
 }
