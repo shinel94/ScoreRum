@@ -101,7 +101,6 @@ const SignUp = () => {
     if (isValidate) {
       postCreateUser(idInput, pwdInput, nickNameInput, emailInput).then(
         (userInfo) => {
-          console.log(userInfo);
           router.push(
             `/dashboard?id=${userInfo.dbId}&name=${userInfo.nickName}&email=${userInfo.email}&auth=${userInfo.isEmailAuth}&loginName=${userInfo.loginName}`
           );

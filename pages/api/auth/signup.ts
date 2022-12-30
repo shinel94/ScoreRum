@@ -20,7 +20,6 @@ export default function handler(
       nickName: string;
       email: string;
     } = JSON.parse(req.body);
-    console.log(signUpInfo);
     return postUser(
       signUpInfo.loginName,
       signUpInfo.nickName,

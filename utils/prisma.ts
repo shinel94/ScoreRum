@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { UserInfo } from "../definition/primary";
+import { FileType, UserInfo } from "../definition/primary";
 import { generateToken, hashing } from "./hash";
 const prisma = new PrismaClient();
 
@@ -41,7 +41,7 @@ export const postUser: (
         if (userInfo) {
           return userInfo;
         } else {
-          throw Error("fail create user");
+          throw new Error("fail create user");
         }
       });
     });
@@ -96,3 +96,121 @@ export const getUserInfo: (
       }
     });
 };
+
+export async function getFileList(dbId: string, basePath: string) {
+  try {
+    const fileList = prisma.files.findMany({
+      where: {
+        id: Number.parseInt(dbId),
+        basePath: basePath,
+      },
+    });
+    if (fileList) {
+      return fileList;
+    } else {
+      return [];
+    }
+  } finally {
+  }
+}
+
+export async function createFile(
+  userId: string,
+  basePath: string,
+  fileName: string,
+  fileType: FileType
+) {
+  try {
+    let scoreId = -1;
+    if (fileType === FileType.file) {
+      fileName = fileName + ".shot";
+      const score = await prisma.score.create({
+        data: {
+          fileName: fileName,
+          content: "",
+        },
+        select: {
+          id: true,
+        },
+      });
+      scoreId = score.id;
+    }
+    const result = await prisma.files.create({
+      data: {
+        userId: Number.parseInt(userId),
+        basePath: basePath,
+        fileName: fileName,
+        fileType: fileType,
+        scoreId: scoreId,
+        isDeleted: false,
+      },
+    });
+    return result;
+  } finally {
+  }
+}
+
+export async function updateScore(scoreId: string, content: string) {
+  try {
+    const result = await prisma.score.update({
+      where: {
+        id: Number.parseInt(scoreId),
+      },
+      data: {
+        content: content,
+      },
+    });
+    return result;
+  } finally {
+  }
+}
+
+export async function deleteFile(
+  userId: string,
+  fileName: string,
+  basePath: string
+) {
+  try {
+    const file = await prisma.files.findFirst({
+      where: {
+        userId: Number.parseInt(userId),
+        fileName: fileName,
+      },
+      select: {
+        id: true,
+        fileType: true,
+        scoreId: true,
+      },
+    });
+    if (file) {
+      await prisma.files.delete({
+        where: {
+          id: file.id,
+        },
+      });
+      if (file.fileType === FileType.file) {
+        await prisma.score.delete({
+          where: {
+            id: file.scoreId,
+          },
+        });
+      }
+    }
+  } finally {
+  }
+}
+
+export async function getFileContent(scoreId: string) {
+  try {
+    const score = await prisma.score.findFirst({
+      where: {
+        id: Number.parseInt(scoreId),
+      },
+      select: {
+        content: true,
+      },
+    });
+    return score;
+  } finally {
+  }
+}
