@@ -53,7 +53,7 @@
 .buttonWrapper {
   display: flex;
   justify-content: center;
-  margin: 0 1rem;
+  margin: 1rem 1rem;
   button {
     cursor: pointer;
     width: 45%;
@@ -83,6 +83,9 @@
     background-color: var(--primary-color-light);
     color: var(--dark-gray);
     box-shadow: 0 8px 24px 0 rgba(255, 235, 167, 0.2);
+    &:disabled {
+      background-color: var(--bright-gray);
+    }
   }
   button:hover {
     background-color: var(--primary-color-dark);

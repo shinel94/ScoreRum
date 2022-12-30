@@ -40,9 +40,9 @@ model User {
   password    String
   nickName    String
   email       String
-  token       String
-  hash        String
+  token       String?
+  hash        String?
   createDate  DateTime
-  isEmailAuth String
+  isEmailAuth Boolean
   isDeleted   Boolean
 }

@@ -1,34 +1,112 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { getIsExistId } from "../../clientAPI/auth";
+import { isEmail } from "../../utils/regex";
 import styles from "./signUp.module.scss";
 
+let buffer: number | NodeJS.Timeout | undefined = undefined;
+
 const SignUp = () => {
-  const idRef = useRef<HTMLInputElement>(null);
-  const pwdRef = useRef<HTMLInputElement>(null);
-  const nickNameRef = useRef<HTMLInputElement>(null);
-  const emailRef = useRef<HTMLInputElement>(null);
+  const [idInput, setIdInput] = useState("");
+  const [pwdInput, setPwdInput] = useState("");
+  const [nickNameInput, setNickNameInput] = useState("");
+  const [emailInput, setEmailInput] = useState("");
+
+  const [validate, setValidate] = useState({
+    id: false,
+    pwd: false,
+    nickName: false,
+    email: false,
+  });
+
+  const isValidate =
+    validate.id && validate.pwd && validate.nickName && validate.email;
+
+  const idExistMessageRef = useRef<HTMLSpanElement>(null);
+  const invalidEmailMessageRef = useRef<HTMLSpanElement>(null);
+  const shortPasswordMessageRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    clearTimeout(buffer);
+    buffer = setTimeout(() => {
+      getIsExistId(idInput).then((exist) => {
+        if (exist) {
+          idExistMessageRef.current?.classList.remove("u-hide");
+        } else {
+          idExistMessageRef.current?.classList.add("u-hide");
+          setValidate((prev) => {
+            return {
+              ...prev,
+              id: true,
+            };
+          });
+        }
+      });
+    });
+  }, [idInput]);
+
+  useEffect(() => {
+    setValidate((prev) => {
+      return {
+        ...prev,
+        nickName: nickNameInput.length > 0,
+      };
+    });
+  }, [nickNameInput]);
+
+  useEffect(() => {
+    if (isEmail(emailInput)) {
+      invalidEmailMessageRef.current?.classList.add("u-hide");
+      setValidate((prev) => {
+        return {
+          ...prev,
+          email: true,
+        };
+      });
+    } else {
+      invalidEmailMessageRef.current?.classList.remove("u-hide");
+      setValidate((prev) => {
+        return {
+          ...prev,
+          email: false,
+        };
+      });
+    }
+  }, [emailInput]);
+
+  useEffect(() => {
+    if (pwdInput.length >= 8) {
+      shortPasswordMessageRef.current?.classList.add("u-hide");
+      setValidate((prev) => {
+        return {
+          ...prev,
+          pwd: true,
+        };
+      });
+    } else {
+      shortPasswordMessageRef.current?.classList.remove("u-hide");
+      setValidate((prev) => {
+        return {
+          ...prev,
+          pwd: false,
+        };
+      });
+    }
+  }, [pwdInput]);
 
   const signUp = () => {};
   return (
     <div className={styles.formWrapper}>
       <div className={styles.inputWrapper}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            width: "100%",
-            justifyContent: "center",
-            alignItems: "center",
+        <input
+          className={styles.formInput}
+          type={"text"}
+          placeholder="ID"
+          onChange={(event) => {
+            setIdInput(event.target.value);
           }}
-        >
-          <input
-            className={styles.formInput}
-            type={"text"}
-            placeholder="ID"
-            ref={idRef}
-          ></input>
-          <span className={styles.invalidMessage}>
-            이미 존재하는 아이디입니다.
-          </span>
+        ></input>
+        <div className={styles.invalidMessage}>
+          <span ref={idExistMessageRef}>이미 존재하는 아이디입니다.</span>
         </div>
       </div>
       <div className={styles.inputWrapper}>
@@ -36,7 +114,9 @@ const SignUp = () => {
           className={styles.formInput}
           type={"text"}
           placeholder="Nickname"
-          ref={nickNameRef}
+          onChange={(event) => {
+            setNickNameInput(event.target.value);
+          }}
         ></input>
       </div>
       <div className={styles.inputWrapper}>
@@ -44,19 +124,29 @@ const SignUp = () => {
           className={styles.formInput}
           type={"text"}
           placeholder="Email"
-          ref={emailRef}
+          onChange={(event) => {
+            setEmailInput(event.target.value);
+          }}
         ></input>
+        <div className={styles.invalidMessage}>
+          <span ref={invalidEmailMessageRef}>정확한 이메일을 입력해주세요</span>
+        </div>
       </div>
       <div className={styles.inputWrapper}>
         <input
           className={styles.formInput}
           type={"password"}
           placeholder="PASSWORD"
-          ref={pwdRef}
+          onChange={(event) => {
+            setPwdInput(event.target.value);
+          }}
         ></input>
+        <div className={styles.invalidMessage}>
+          <span ref={shortPasswordMessageRef}>8자 이상으로 설정해주세요</span>
+        </div>
       </div>
       <div className={styles.buttonWrapper}>
-        <button onClick={signUp}>
+        <button onClick={signUp} disabled={!isValidate}>
           <span>SIGN UP</span>
         </button>
       </div>

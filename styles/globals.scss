@@ -55,6 +55,10 @@ a {
   user-select: none;
 }
 
+.u-hide {
+  display: none;
+}
+
 @keyframes invalid-vibrate {
   0% {
     transform: translateX(2px);

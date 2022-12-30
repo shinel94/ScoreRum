@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { UserInfo } from "../../../../definition/primary";
-import { readUser, writeUser } from "../../../../utils/mongo";
+import { UserInfo } from "../../../definition/primary";
+import { readUser, writeUser } from "../../../utils/mongo";
 
 type Data = {
   user: UserInfo | undefined;

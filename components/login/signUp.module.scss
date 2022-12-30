@@ -8,6 +8,9 @@
   display: flex;
   justify-content: center;
   margin: 1rem 0;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
 }
 
 .formInput {
@@ -53,7 +56,7 @@
 .buttonWrapper {
   display: flex;
   justify-content: center;
-  margin: 0 1rem;
+  margin: 1rem 1rem;
   button {
     cursor: pointer;
     width: 45%;
@@ -83,10 +86,19 @@
     background-color: var(--primary-color-light);
     color: var(--dark-gray);
     box-shadow: 0 8px 24px 0 rgba(255, 235, 167, 0.2);
+    &:disabled {
+      background-color: var(--bright-gray);
+      box-shadow: none;
+    }
   }
   button:hover {
     background-color: var(--primary-color-dark);
     box-shadow: 0 3px 6px 0 var(--bright-gray);
+    &:disabled {
+      background-color: var(--bright-gray);
+      box-shadow: none;
+      cursor: default;
+    }
   }
 }
 
@@ -99,8 +111,13 @@
   animation-name: invalid-vibrate;
 }
 .invalidMessage {
-  font-size: 0.25rem;
-  text-align: left;
+  height: 0.25rem;
   width: 80%;
-  margin-left: 1rem;
+  span {
+    font-size: 0.25rem;
+    text-align: left;
+    width: 80%;
+    margin-left: 1rem;
+    color: var(--invalid-color);
+  }
 }
