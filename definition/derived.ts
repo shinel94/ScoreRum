@@ -1,10 +1,9 @@
-import { ObjectId } from "mongodb";
 import Vex from "vexflow";
 import { FileType } from "./primary";
 
 export class RumFile {
   constructor(
-    public fileId: ObjectId,
+    public fileId: number,
     public basePath: string,
     public name: string,
     public fileType: FileType,
@@ -13,8 +12,8 @@ export class RumFile {
 
   public static fromFileListResponse: (
     response: {
-      _id: ObjectId;
-      userId: string;
+      id: number;
+      userId: number;
       basePath: string;
       fileName: string;
       fileType: FileType;
@@ -23,7 +22,7 @@ export class RumFile {
   ) => RumFile[] = (response) => {
     return response.map((fileInfo) => {
       return new RumFile(
-        fileInfo._id,
+        fileInfo.id,
         fileInfo.basePath,
         fileInfo.fileName,
         fileInfo.fileType,

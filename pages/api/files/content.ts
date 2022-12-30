@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getFileContent, updateScore } from "../../../utils/mongo";
+import { getFileContent, updateScore } from "../../../utils/prisma";
 
 type Data = {};
 

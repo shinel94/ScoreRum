@@ -97,11 +97,11 @@ export const getUserInfo: (
     });
 };
 
-export async function getFileList(dbId: string, basePath: string) {
+export async function getFileList(userId: string, basePath: string) {
   try {
-    const fileList = prisma.files.findMany({
+    const fileList = await prisma.files.findMany({
       where: {
-        id: Number.parseInt(dbId),
+        userId: Number.parseInt(userId),
         basePath: basePath,
       },
     });

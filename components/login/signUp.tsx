@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { getIsExistId, postCreateUser } from "../../clientAPI/auth";
+import { clientGetIsExistId, clientPostCreateUser } from "../../clientAPI/auth";
 import { isEmail } from "../../utils/regex";
 import styles from "./signUp.module.scss";
 
@@ -31,7 +31,7 @@ const SignUp = () => {
     clearTimeout(buffer);
     if (idInput.length > 0) {
       buffer = setTimeout(() => {
-        getIsExistId(idInput).then((exist) => {
+        clientGetIsExistId(idInput).then((exist) => {
           if (exist) {
             idExistMessageRef.current?.classList.remove("u-hide");
           } else {
@@ -99,7 +99,7 @@ const SignUp = () => {
 
   const signUp = () => {
     if (isValidate) {
-      postCreateUser(idInput, pwdInput, nickNameInput, emailInput).then(
+      clientPostCreateUser(idInput, pwdInput, nickNameInput, emailInput).then(
         (userInfo) => {
           router.push(
             `/dashboard?id=${userInfo.dbId}&name=${userInfo.nickName}&email=${userInfo.email}&auth=${userInfo.isEmailAuth}&loginName=${userInfo.loginName}`

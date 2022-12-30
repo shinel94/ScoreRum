@@ -16,6 +16,7 @@ export const getFileList: (
     .then((response) => {
       if (response.ok) {
         return response.json().then((data) => {
+          console.log(data);
           return RumFile.fromFileListResponse(data.files);
         });
       } else {

@@ -3,7 +3,7 @@ import { UserInfo } from "../../../definition/primary";
 import { postUser } from "../../../utils/prisma";
 
 type Data = {
-  userInfo: UserInfo | undefined;
+  userInfo: UserInfo;
 };
 type ErrorResponse = {
   message: string;
