@@ -63,6 +63,7 @@ export const getUserInfo: (
         email: true,
         isEmailAuth: true,
         isDeleted: true,
+        hash: true,
       },
     })
     .then((value) => {
@@ -88,12 +89,47 @@ export const getUserInfo: (
               email: value.email,
               isEmailAuth: value.isEmailAuth,
               token: generateToken(loginName, pwd),
+              hash: value.hash ? value.hash : undefined,
             };
             return userInfo;
           });
       } else {
         return undefined;
       }
+    });
+};
+
+export const authEmail: (hash: string) => Promise<boolean> = (hash) => {
+  return prisma.user
+    .findFirst({
+      where: {
+        hash: hash,
+      },
+    })
+    .then((value) => {
+      if (value) {
+        prisma.user
+          .update({
+            where: {
+              id: value.id,
+            },
+            data: {
+              isEmailAuth: true,
+            },
+          })
+          .then(() => {
+            return true;
+          })
+          .catch((error) => {
+            console.log(error);
+            return false;
+          });
+      }
+      return false;
+    })
+    .catch((error) => {
+      console.log(error);
+      return false;
     });
 };
 

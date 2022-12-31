@@ -1,6 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import {
+  AUTH_EMAIL_CONTENT,
+  AUTH_EMAIL_SUBJECT,
+} from "../../../definition/constant";
 import { UserInfo } from "../../../definition/primary";
 import { postUser } from "../../../utils/prisma";
+import { sendMail } from "../../../utils/smtp";
 
 type Data = {
   userInfo: UserInfo;
@@ -27,6 +32,14 @@ export default function handler(
       signUpInfo.password
     )
       .then((result) => {
+        if (result.hash) {
+          sendMail(
+            result.email,
+            AUTH_EMAIL_SUBJECT,
+            AUTH_EMAIL_CONTENT.replace("{hash}", result.hash)
+          );
+        }
+
         return res.status(200).json({ userInfo: result });
       })
       .catch((error) => {

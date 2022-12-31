@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { isExistId } from "../../../utils/prisma";
+import { authEmail } from "../../../../utils/prisma";
 
 type Data = {
   exist: boolean;
@@ -10,10 +10,11 @@ export default function handler(
   res: NextApiResponse<Data>
 ) {
   if (req.method === "GET") {
-    isExistId(req.query.id as string).then((exist) => {
-      return res.status(200).json({
-        exist: exist,
+    const { hash } = req.query;
+    if (hash) {
+      authEmail(hash.toString()).then(() => {
+        res.redirect(307, "/").end();
       });
-    });
+    }
   }
 }

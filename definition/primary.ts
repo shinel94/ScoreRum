@@ -5,6 +5,7 @@ export type UserInfo = {
   email: string;
   isEmailAuth: boolean;
   token: string;
+  hash?: string;
 };
 
 export enum FileType {
@@ -20,4 +21,11 @@ export type Length = {
 export type Sound = {
   value: string;
   label: string;
+};
+
+export type SmtpMailOption = {
+  from: string;
+  to: string;
+  subject: string;
+  html: string;
 };
