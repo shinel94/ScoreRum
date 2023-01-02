@@ -1,6 +1,7 @@
 import "../styles/globals.scss";
 import type { AppProps } from "next/app";
-import { useEffect } from "react";
+import ToastProvider from "../store/toastContext";
+import Toast from "../components/notification/toast";
 
 declare global {
   interface Window {
@@ -19,7 +20,12 @@ function MyApp({ Component, pageProps }: AppProps) {
   //     console.log(e);
   //   }
   // }, []);
-  return <Component {...pageProps} />;
+  return (
+    <ToastProvider>
+      <Toast />
+      <Component {...pageProps} />
+    </ToastProvider>
+  );
 }
 
 export default MyApp;

@@ -29,3 +29,5 @@ export type SmtpMailOption = {
   subject: string;
   html: string;
 };
+
+export type ToastLevel = "info" | "warning" | "error" | "success"
