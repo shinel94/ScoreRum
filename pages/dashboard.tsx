@@ -5,14 +5,15 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import DashboardBody from "../components/dashboard/dashboardBody";
 import { useToast } from "../store/toastContext";
+import { clientGetIsValidateToken } from "../clientAPI/auth";
 
 type dashboardPropType = {
-  NAVER_CLIENT_ID: string;
   id: string | null;
   email: string | null;
   name: string | null;
   auth: boolean | null;
   loginName: string | null;
+  token: string | null;
 };
 
 const Dashboard: NextPage<dashboardPropType, {}> = (props) => {
@@ -32,18 +33,29 @@ const Dashboard: NextPage<dashboardPropType, {}> = (props) => {
   }, [props.auth]);
 
   useEffect(() => {
-    if (!props.id || !props.email || !props.name) {
+    if (!props.id || !props.email || !props.name || !props.token) {
       router.push("/");
     } else {
-      setDashboardBody(
-        <DashboardBody
-          id={props.id}
-          email={props.email}
-          name={props.name}
-          auth={props.auth ? props.auth : false}
-          logoutHander={logoutEventHandler}
-        />
-      );
+      const userId = props.id;
+      const userEmail = props.email;
+      const userName = props.name;
+      const userToken = props.token;
+
+      clientGetIsValidateToken(props.id, userToken).then((result) => {
+        if (result) {
+          setDashboardBody(
+            <DashboardBody
+              id={userId}
+              email={userEmail}
+              name={userName}
+              auth={props.auth ? props.auth : false}
+              logoutHander={logoutEventHandler}
+            />
+          );
+        } else {
+          router.push("/");
+        }
+      });
     }
   }, [props, router]);
 
@@ -66,12 +78,11 @@ const Dashboard: NextPage<dashboardPropType, {}> = (props) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
-      NAVER_CLIENT_ID: process.env.NAVER_CLIENT_ID
-        ? process.env.NAVER_CLIENT_ID
-        : "",
       id: context.query.id ? context.query.id : null,
       email: context.query.email ? context.query.email : null,
       name: context.query.name ? context.query.name : null,
+      auth: context.query.auth ? context.query.auth : null,
+      token: context.query.token ? context.query.token : null,
     },
   };
 };

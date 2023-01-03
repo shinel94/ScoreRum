@@ -18,6 +18,25 @@ export const isExistId: (id: string) => Promise<boolean> = (id) => {
     });
 };
 
+export const isValidateToken: (
+  id: number,
+  token: string
+) => Promise<boolean> = (id, token) => {
+  return prisma.user
+    .findFirst({
+      where: {
+        id: id,
+        token: token,
+      },
+      select: {
+        id: true,
+      },
+    })
+    .then((value) => {
+      return value ? true : false;
+    });
+};
+
 export const postUser: (
   loginName: string,
   nickName: string,
@@ -88,7 +107,7 @@ export const getUserInfo: (
               nickName: value.nickName,
               email: value.email,
               isEmailAuth: value.isEmailAuth,
-              token: generateToken(loginName, pwd),
+              token: token,
               hash: value.hash ? value.hash : undefined,
             };
             return userInfo;

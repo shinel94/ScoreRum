@@ -16,7 +16,6 @@ export const getFileList: (
     .then((response) => {
       if (response.ok) {
         return response.json().then((data) => {
-          console.log(data);
           return RumFile.fromFileListResponse(data.files);
         });
       } else {
@@ -155,9 +154,7 @@ export const updateScoreContent: (
   })
     .then((response) => {
       if (response.ok) {
-        return response.json().then((data) => {
-          console.log(data);
-        });
+        return response.json().then((data) => {});
       } else {
         return undefined;
       }

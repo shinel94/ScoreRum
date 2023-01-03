@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { isExistId } from "../../../utils/prisma";
+import { isValidateToken } from "../../../utils/prisma";
 
 type Data = {
-  exist: boolean;
+  validate: boolean;
 };
 
 export default function handler(
@@ -10,9 +10,12 @@ export default function handler(
   res: NextApiResponse<Data>
 ) {
   if (req.method === "GET") {
-    return isExistId(req.query.id as string).then((exist) => {
+    return isValidateToken(
+      +(req.query.id as string),
+      req.query.token as string
+    ).then((validate) => {
       return res.status(200).json({
-        exist: exist,
+        validate: validate,
       });
     });
   }

@@ -1,20 +1,31 @@
 import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
 import { clientGetUserInfo } from "../../clientAPI/auth";
+import { useToast } from "../../store/toastContext";
 import styles from "./signIn.module.scss";
 const SignIn = () => {
   const idRef = useRef<HTMLInputElement>(null);
   const pwdRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const { toast } = useToast();
   const signIn = () => {
     const idInput = idRef ? (idRef.current ? idRef.current.value : "") : "";
     const pwdInput = pwdRef ? (pwdRef.current ? pwdRef.current.value : "") : "";
     if (idInput.length * pwdInput.length > 0) {
-      clientGetUserInfo(idInput, pwdInput).then((userInfo) => {
-        router.push(
-          `/dashboard?id=${userInfo.dbId}&name=${userInfo.nickName}&email=${userInfo.email}&auth=${userInfo.isEmailAuth}&loginName=${userInfo.loginName}`
-        );
-      });
+      clientGetUserInfo(idInput, pwdInput)
+        .then((userInfo) => {
+          if (userInfo) {
+            router.push(
+              `/dashboard?id=${userInfo.dbId}&name=${userInfo.nickName}&email=${userInfo.email}&auth=${userInfo.isEmailAuth}&loginName=${userInfo.loginName}&token=${userInfo.token}`,
+              "/dashboard"
+            );
+          } else {
+            toast("error", "fail login score rum", 1000);
+          }
+        })
+        .catch((error) => {
+          toast("error", "fail login score rum", 1000);
+        });
     }
   };
 
@@ -51,7 +62,7 @@ const SignIn = () => {
         ></input>
       </div>
       <div className={styles.buttonWrapper}>
-        <button>
+        <button onClick={signIn}>
           <span>SIGN IN</span>
         </button>
       </div>

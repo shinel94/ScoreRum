@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { clientGetIsExistId, clientPostCreateUser } from "../../clientAPI/auth";
+import { useToast } from "../../store/toastContext";
 import { isEmail } from "../../utils/regex";
 import styles from "./signUp.module.scss";
 
@@ -12,6 +13,7 @@ const SignUp = () => {
   const [nickNameInput, setNickNameInput] = useState("");
   const [emailInput, setEmailInput] = useState("");
   const router = useRouter();
+  const { toast } = useToast();
 
   const [validate, setValidate] = useState({
     id: false,
@@ -99,13 +101,20 @@ const SignUp = () => {
 
   const signUp = () => {
     if (isValidate) {
-      clientPostCreateUser(idInput, pwdInput, nickNameInput, emailInput).then(
-        (userInfo) => {
-          router.push(
-            `/dashboard?id=${userInfo.dbId}&name=${userInfo.nickName}&email=${userInfo.email}&auth=${userInfo.isEmailAuth}&loginName=${userInfo.loginName}`
-          );
-        }
-      );
+      clientPostCreateUser(idInput, pwdInput, nickNameInput, emailInput)
+        .then((userInfo) => {
+          if (userInfo) {
+            router.push(
+              `/dashboard?id=${userInfo.dbId}&name=${userInfo.nickName}&email=${userInfo.email}&auth=${userInfo.isEmailAuth}&loginName=${userInfo.loginName}&token=${userInfo.token}`,
+              "/dashboard"
+            );
+          } else {
+            toast("error", "fail create user", 3000);
+          }
+        })
+        .catch((error) => {
+          toast("error", "fail login score rum", 1000);
+        });
     }
   };
   return (

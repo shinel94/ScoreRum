@@ -1,5 +1,25 @@
 import { UserInfo } from "../definition/primary";
 
+export const clientGetIsValidateToken: (
+  id: string,
+  token: string
+) => Promise<boolean> = (id, token) => {
+  const url = new URL(window.location.origin + "/api/auth/token");
+  const params = new URLSearchParams(url.search);
+  params.set("id", id);
+  params.set("token", token);
+  url.search = params.toString();
+  return fetch(url.toString(), {
+    method: "GET",
+  }).then((response) => {
+    if (response.ok) {
+      return response.json().then((data) => {
+        return data.validate;
+      });
+    }
+  });
+};
+
 export const clientGetIsExistId: (id: string) => Promise<boolean> = (id) => {
   const url = new URL(window.location.origin + "/api/auth/exist");
   const params = new URLSearchParams(url.search);
