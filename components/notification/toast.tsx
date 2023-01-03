@@ -25,11 +25,10 @@ const Toast: React.FC = () => {
       className={`${styles.toast} ${getLevelStyle()} ${
         show ? styles.toastShow : ""
       }`}
+      onClick={close}
     >
-      <div>
-        <div>{content}</div>
-        <button onClick={close}>✕</button>
-      </div>
+      <div>{content}</div>
+      <span>✕</span>
     </div>
   );
 };

@@ -14,11 +14,13 @@ import ScoreHeader from "../scores/scoreHeader";
 import styles from "./dashboardBody.module.scss";
 import DashboardFileList from "./dashboardFileList";
 import DashboardHeader from "./dashboardHeader";
+import { useToast } from "../../store/toastContext";
 
 type dashboardBodyType = {
   id: string;
   name: string;
   email: string;
+  auth: boolean;
   logoutHander: () => void;
 };
 
@@ -36,6 +38,7 @@ export default function DashboardBody(props: dashboardBodyType) {
   const [selectedScore, setSelectedScore] = useState<Score | undefined>(
     undefined
   );
+  const { toast } = useToast();
 
   const fetchFileList = useCallback((basePath: string) => {
     getFileList(props.id, basePath).then((data) => {
@@ -57,6 +60,18 @@ export default function DashboardBody(props: dashboardBodyType) {
   };
 
   const createFileEventListener = (fileType: FileType) => {
+    if (!props.auth && fileList.length > 3) {
+      toast(
+        "error",
+        "need to account authorization for create more score",
+        3000
+      );
+      setIsFileCreateModalShow(false);
+      setIsScoreCreateModalShow(false);
+      setIsCreating(false);
+      return;
+    }
+
     if (fileName.trim().length === 0) {
       alert("File name can't be empty");
       return;
@@ -126,6 +141,7 @@ export default function DashboardBody(props: dashboardBodyType) {
       {selectedScore === undefined || selectedFile === undefined ? (
         <div className={styles.dashboard}>
           <DashboardHeader
+            auth={props.auth}
             basePath={basePathList.join(" / ")}
             setCreateDirectoryEventListener={() => {
               setFileName("");

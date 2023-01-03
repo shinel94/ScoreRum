@@ -1,13 +1,13 @@
-import { createContext, useContext } from 'react';
-import React, { useState } from 'react';
-import { ToastLevel } from '../definition/primary';
+import { createContext, useContext } from "react";
+import React, { useState } from "react";
+import { ToastLevel } from "../definition/primary";
 
 // 알림창 Context의 State
 interface State {
   show: boolean;
   level: ToastLevel;
   content: string;
-  toast: (level: ToastLevel, contnet:string, duration: number) => void;
+  toast: (level: ToastLevel, contnet: string, duration: number) => void;
   close: () => void;
 }
 
@@ -15,36 +15,42 @@ interface State {
 const defaultState: State = {
   show: false,
   level: "info",
-  content: '',
+  content: "",
   toast: (level, content, duration) => {},
-  close: () => {}
+  close: () => {},
 };
 
 // Provider에 들어갈 value를 생성한다.
 const StateContext = createContext(defaultState);
 
-
 const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [state, setState] = useState(defaultState);
-  
-  
+  var closeTimeout: NodeJS.Timeout | undefined = undefined;
+
   // 작업 성공 시 초록색 알림창을 띄우는 함수
-  const toast = (level: ToastLevel, content: string, duration: number = 3000) => {
+  const toast = (
+    level: ToastLevel,
+    content: string,
+    duration: number = 3000
+  ) => {
+    close();
+    clearTimeout(closeTimeout);
     setState((prev) => ({
       ...prev,
       show: true,
       level: level,
-      content: content
+      content: content,
     }));
-    setTimeout(() => {
-      close()
-    }, duration)
+    closeTimeout = setTimeout(() => {
+      close();
+    }, duration);
   };
-  
+
   // 알림창을 닫는 함수
   const close = () => {
+    clearTimeout(closeTimeout);
     setState(defaultState);
   };
 
@@ -55,7 +61,7 @@ const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
     toast,
     close,
   };
-  
+
   return (
     <StateContext.Provider value={toastCtx}>{children}</StateContext.Provider>
   );

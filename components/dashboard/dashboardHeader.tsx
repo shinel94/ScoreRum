@@ -5,9 +5,11 @@ import { mdiFileMusicOutline } from "@mdi/js";
 import { mdiTrashCanOutline } from "@mdi/js";
 
 import styles from "./dashboardHeader.module.scss";
+import { useToast } from "../../store/toastContext";
 
 type dashboardHeader = {
   basePath: string;
+  auth: boolean;
   setCreateDirectoryEventListener: () => void;
   setCreateScoreEventListener: () => void;
   setUserInfoEventListener: () => void;
@@ -16,6 +18,7 @@ type dashboardHeader = {
 };
 
 export default function DashboardHeader(props: dashboardHeader) {
+  const { toast } = useToast();
   return (
     <div className={styles.dashboardHeader}>
       <div
@@ -37,7 +40,17 @@ export default function DashboardHeader(props: dashboardHeader) {
         </div>
         <div
           className={styles.dashboardHeaderButton}
-          onClick={props.setCreateDirectoryEventListener}
+          onClick={
+            props.auth
+              ? props.setCreateDirectoryEventListener
+              : () => {
+                  toast(
+                    "warning",
+                    "need to account authorization for create directory",
+                    3000
+                  );
+                }
+          }
         >
           <Icon path={mdiFolderPlus} size="2rem" />
         </div>

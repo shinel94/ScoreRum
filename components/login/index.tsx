@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useToast } from "../../store/toastContext";
 import styles from "./index.module.scss";
 
 import SignIn from "./signIn";
@@ -12,8 +11,6 @@ export default function Login(props: loginProps) {
   const router = useRouter();
   const [showLogin, setShowLogin] = useState(true);
 
-  const { toast } = useToast();
-
   useEffect(() => {
     if (window.location.href.includes("access_token")) {
       window.localStorage.setItem(
@@ -23,11 +20,6 @@ export default function Login(props: loginProps) {
       router.push("/");
     }
   }, [router]);
-
-  useEffect(() => {
-    console.log('toast')
-    toast('info', "test info", 1000)
-  }, [])
 
   return (
     <>

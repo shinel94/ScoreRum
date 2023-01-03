@@ -4,6 +4,7 @@ import styles from "../styles/Dashboard.module.scss";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import DashboardBody from "../components/dashboard/dashboardBody";
+import { useToast } from "../store/toastContext";
 
 type dashboardPropType = {
   NAVER_CLIENT_ID: string;
@@ -22,6 +23,14 @@ const Dashboard: NextPage<dashboardPropType, {}> = (props) => {
   const logoutEventHandler = () => {
     router.push("/");
   };
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (!props.auth) {
+      toast("warning", "Please check email for account authorization", 3000);
+    }
+  }, [props.auth]);
+
   useEffect(() => {
     if (!props.id || !props.email || !props.name) {
       router.push("/");
@@ -31,6 +40,7 @@ const Dashboard: NextPage<dashboardPropType, {}> = (props) => {
           id={props.id}
           email={props.email}
           name={props.name}
+          auth={props.auth ? props.auth : false}
           logoutHander={logoutEventHandler}
         />
       );
