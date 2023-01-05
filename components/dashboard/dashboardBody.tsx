@@ -8,19 +8,21 @@ import {
 import { RumFile, Score } from "../../definition/derived";
 import { FileType } from "../../definition/primary";
 import { Modal } from "../modal/modal";
-import { StaveNote } from "vexflow";
 import ScoreBody from "../scores/scoreBody";
-import ScoreHeader from "../scores/scoreHeader";
 import styles from "./dashboardBody.module.scss";
 import DashboardFileList from "./dashboardFileList";
 import DashboardHeader from "./dashboardHeader";
 import { useToast } from "../../store/toastContext";
+import { mdiAccountOff, mdiAccountCheck } from '@mdi/js';
+import Icon from "@mdi/react";
+import { clientResendAuthorizationMail } from "../../clientAPI/auth";
 
 type dashboardBodyType = {
   id: string;
   name: string;
   email: string;
   auth: boolean;
+  loginName: string;
   logoutHander: () => void;
 };
 
@@ -217,7 +219,7 @@ export default function DashboardBody(props: dashboardBodyType) {
               </div>
             </Modal>
             <Modal
-              header="UserInfo"
+              header="Info"
               open={isUserInfoModalShow}
               modalCloseEventListener={() => {
                 setIsUserInfoModalShow(false);
@@ -235,6 +237,19 @@ export default function DashboardBody(props: dashboardBodyType) {
                 <div>
                   <label>Email</label>
                   <input readOnly value={props.email} />
+                </div>
+                <div>
+                  <label>Authrized</label>
+                  <div onClick={
+                    props.auth ? () => {} : 
+                    () => {
+                      if (confirm("resend authrization email?")) {
+                        clientResendAuthorizationMail(props.loginName, props.email)
+                      }
+                    }
+                  } style={{cursor: props.auth ? "default" : "pointer"}}>
+                    <Icon path={props.auth ? mdiAccountCheck : mdiAccountOff} size="1rem"/>
+                  </div>
                 </div>
               </div>
             </Modal>

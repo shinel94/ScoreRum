@@ -15,6 +15,8 @@ const SignIn = () => {
       clientGetUserInfo(idInput, pwdInput)
         .then((userInfo) => {
           if (userInfo) {
+            localStorage.setItem('U-T', userInfo.token)
+            localStorage.setItem('U-I', userInfo.dbId.toString())
             router.push(
               `/dashboard?id=${userInfo.dbId}&name=${userInfo.nickName}&email=${userInfo.email}&auth=${userInfo.isEmailAuth}&loginName=${userInfo.loginName}&token=${userInfo.token}`,
               "/dashboard"

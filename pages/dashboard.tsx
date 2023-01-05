@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import DashboardBody from "../components/dashboard/dashboardBody";
 import { useToast } from "../store/toastContext";
-import { clientGetIsValidateToken } from "../clientAPI/auth";
+import { clientGetUserInfoByToken } from "../clientAPI/auth";
 
 type dashboardPropType = {
   id: string | null;
@@ -22,40 +22,50 @@ const Dashboard: NextPage<dashboardPropType, {}> = (props) => {
     undefined
   );
   const logoutEventHandler = () => {
+    localStorage.removeItem("U-I")
+    localStorage.removeItem("U-T")
     router.push("/");
   };
-  const { toast } = useToast();
+  const { toast, close } = useToast();
 
   useEffect(() => {
     if (!props.auth) {
       toast("warning", "Please check email for account authorization", 3000);
+    } else {
+      close()
     }
   }, [props.auth]);
 
   useEffect(() => {
     if (!props.id || !props.email || !props.name || !props.token) {
-      router.push("/");
-    } else {
-      const userId = props.id;
-      const userEmail = props.email;
-      const userName = props.name;
-      const userToken = props.token;
-
-      clientGetIsValidateToken(props.id, userToken).then((result) => {
-        if (result) {
-          setDashboardBody(
-            <DashboardBody
-              id={userId}
-              email={userEmail}
-              name={userName}
-              auth={props.auth ? props.auth : false}
-              logoutHander={logoutEventHandler}
-            />
+      
+      const savedId = localStorage.getItem("U-I")
+      const saveToken = localStorage.getItem("U-T")
+      if (savedId && saveToken) {
+        clientGetUserInfoByToken(savedId, saveToken).then((userInfo) => {
+          router.push(
+            `/dashboard?id=${userInfo.dbId}&name=${userInfo.nickName}&email=${userInfo.email}&auth=${userInfo.isEmailAuth}&loginName=${userInfo.loginName}&token=${userInfo.token}`,
+            "/dashboard"
           );
-        } else {
+        }).catch(() => {
           router.push("/");
-        }
-      });
+        });
+      } else {
+        router.push("/");
+      }
+      
+    } else {
+      setDashboardBody(
+        <DashboardBody
+          id={props.id}
+          email={props.email}
+          name={props.name}
+          loginName={props.loginName ? props.loginName : ''}
+          auth={props.auth ? props.auth : false}
+          logoutHander={logoutEventHandler}
+        />
+      );
+      
     }
   }, [props, router]);
 
@@ -81,7 +91,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       id: context.query.id ? context.query.id : null,
       email: context.query.email ? context.query.email : null,
       name: context.query.name ? context.query.name : null,
-      auth: context.query.auth ? context.query.auth : null,
+      loginName: context.query.loginName ? context.query.loginName : null,
+      auth: context.query.auth ==="true" ? true : false,
       token: context.query.token ? context.query.token : null,
     },
   };

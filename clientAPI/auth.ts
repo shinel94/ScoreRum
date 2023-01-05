@@ -1,9 +1,9 @@
 import { UserInfo } from "../definition/primary";
 
-export const clientGetIsValidateToken: (
+export const clientGetUserInfoByToken: (
   id: string,
   token: string
-) => Promise<boolean> = (id, token) => {
+) => Promise<UserInfo> = (id, token) => {
   const url = new URL(window.location.origin + "/api/auth/token");
   const params = new URLSearchParams(url.search);
   params.set("id", id);
@@ -11,13 +11,26 @@ export const clientGetIsValidateToken: (
   url.search = params.toString();
   return fetch(url.toString(), {
     method: "GET",
-  }).then((response) => {
-    if (response.ok) {
-      return response.json().then((data) => {
-        return data.validate;
-      });
-    }
-  });
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response
+          .json()
+          .then((data) => {
+            if (data.userInfo) {
+              return data.userInfo;
+            } else {
+              throw new Error("can't signin by info");
+            }
+          })
+          .catch(() => {
+            throw new Error("can't signin by info");
+          });
+      }
+    })
+    .catch(() => {
+      throw new Error("can't signin by info");
+    });
 };
 
 export const clientGetIsExistId: (id: string) => Promise<boolean> = (id) => {
@@ -88,6 +101,23 @@ export const clientPostCreateUser: (
     if (response.ok) {
       return response.json().then((data) => {
         return data.userInfo;
+      });
+    }
+  });
+};
+
+export const clientResendAuthorizationMail: (loginName: string, email: string) => Promise<boolean> = (loginName, email) => {
+  const url = new URL(window.location.origin + `/api/auth/email`);
+  return fetch(url.toString(), {
+    method: "POST",
+    body: JSON.stringify({
+      loginName: loginName,
+      email: email
+    }),
+  }).then((response) => {
+    if (response.ok) {
+      return response.json().then((data) => {
+        return data.success;
       });
     }
   });

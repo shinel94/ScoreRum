@@ -3,7 +3,7 @@ import {
   AUTH_EMAIL_CONTENT,
   AUTH_EMAIL_SUBJECT,
 } from "../../../../definition/constant";
-import { authEmail } from "../../../../utils/prisma";
+import { hashing } from "../../../../utils/hash";
 import { sendMail } from "../../../../utils/smtp";
 
 type Data = {
@@ -14,12 +14,16 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  if (req.method === "GET") {
-    const { hash } = req.query;
+  if (req.method === "POST") {
+    const { email, loginName } = JSON.parse(req.body);
+    const hash = hashing(loginName + email)
     if (hash) {
-      authEmail(hash.toString()).then(() => {
-        res.redirect(307, "/").end();
-      });
+      sendMail(
+        email,
+        AUTH_EMAIL_SUBJECT,
+        AUTH_EMAIL_CONTENT.replace("{hash}", hash)
+      );
+      return res.status(200)
     }
   }
 }

@@ -1,22 +1,31 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { isValidateToken } from "../../../utils/prisma";
+import { UserInfo } from "../../../definition/primary";
+import { getUserInfoByToken } from "../../../utils/prisma";
 
 type Data = {
-  validate: boolean;
+  userInfo: UserInfo;
 };
+type ErrorData = {
+  message: string
+}
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<Data | ErrorData>
 ) {
   if (req.method === "GET") {
-    return isValidateToken(
+    return getUserInfoByToken(
       +(req.query.id as string),
       req.query.token as string
-    ).then((validate) => {
+    ).then((userInfo) => {
+      if (userInfo)
       return res.status(200).json({
-        validate: validate,
+        userInfo: userInfo,
       });
+    }).catch(() => {
+      return res.status(400).json({
+        message: "fail get user info"
+      })
     });
   }
 }
