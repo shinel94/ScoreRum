@@ -46,7 +46,7 @@ export default function DashboardHeader(props: dashboardHeader) {
               : () => {
                   toast(
                     "warning",
-                    "need to account authorization for create directory",
+                    "폴더를 생성하기 위해서는 계정 인증이 필요합니다.",
                     3000
                   );
                 }

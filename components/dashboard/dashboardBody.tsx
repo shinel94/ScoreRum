@@ -65,7 +65,7 @@ export default function DashboardBody(props: dashboardBodyType) {
     if (!props.auth && fileList.length > 3) {
       toast(
         "error",
-        "need to account authorization for create more score",
+        "추가적인 악보를 생성하기 위해서는 계정 인증이 필요합니다.",
         3000
       );
       setIsFileCreateModalShow(false);

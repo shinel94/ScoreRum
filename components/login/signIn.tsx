@@ -22,11 +22,11 @@ const SignIn = () => {
               "/dashboard"
             );
           } else {
-            toast("error", "fail login score rum", 1000);
+            toast("error", "로그인에 실패하였습니다.", 1000);
           }
         })
         .catch((error) => {
-          toast("error", "fail login score rum", 1000);
+          toast("error", "로그인에 실패하였습니다.", 1000);
         });
     }
   };

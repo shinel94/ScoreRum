@@ -111,11 +111,11 @@ const SignUp = () => {
               "/dashboard"
             );
           } else {
-            toast("error", "fail create user", 3000);
+            toast("error", "계정 생성을 실패하였습니다.", 3000);
           }
         })
         .catch((error) => {
-          toast("error", "fail login score rum", 1000);
+          toast("error", "로그인에 실패하였습니다.", 1000);
         });
     }
   };

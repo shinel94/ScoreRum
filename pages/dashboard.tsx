@@ -30,7 +30,7 @@ const Dashboard: NextPage<dashboardPropType, {}> = (props) => {
 
   useEffect(() => {
     if (!props.auth) {
-      toast("warning", "Please check email for account authorization", 3000);
+      toast("warning", "계정 인증을 위해서 이메일을 확인해주세요.", 3000);
     } else {
       close()
     }
