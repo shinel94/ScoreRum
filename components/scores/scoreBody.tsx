@@ -1,4 +1,6 @@
+import Joyride from "react-joyride";
 import styles from "./scoreBody.module.scss";
+import controllerStyles from "./scoreController.module.scss";
 import Vex from "vexflow";
 import { RumFile, Score } from "../../definition/derived";
 import { useEffect, useState } from "react";
@@ -16,6 +18,75 @@ type scoreBodyType = {
 const { Renderer, Stave, StaveNote, Formatter, Beam } = Vex.Flow;
 
 export default function ScoreBody(props: scoreBodyType) {
+  const [runTour, setRunTour] = useState<boolean>(false);
+  const steps = [
+    {
+      target: `.${styles.scoreBody}`,
+      content: "Drummer를 위한 악보 툴 Score rum에 오신 것을 환영합니다.",
+    },
+    {
+      target: `.${styles.scoreBody}`,
+      content:
+        "드럼 악보를 볼줄 안다고 생각하고, shot을 채우는 방법을 알려드리겠습니다.",
+    },
+    {
+      target: `.${controllerStyles.scoreController}`,
+      content:
+        "마우스를 통해서 이 패널을 제어해서 악보를 그릴 수 있습니다.",
+    },
+    {
+      target: `.${controllerStyles.length}`,
+      content:
+        "이것을 통해서 음표의 길이를 제어할 수 있습니다.",
+    },
+    {
+      target: `.${controllerStyles.rest}`,
+      content:
+        "이 버튼을 통해서 쉼표를 입력할 수 있습니다. 이때 쉼표를 선택하면, 다른 악기 음표는 표시되지 않습니다.",
+    },
+    {
+      target: `.${controllerStyles.soundList}`,
+      content:
+        "이 패널을 통해서 드럼 악기의 음표를 그릴 수 있습니다.",
+    },
+    {
+      target: `.${controllerStyles.soundList}`,
+      content:
+        "다음과 같이 약어로 악기를 표현합니다.",
+    },
+    {
+      target: `.${controllerStyles.soundList}`,
+      content:
+        "HH: high hat / CR: crash / RI: ride / SN: snare",
+    },
+    {
+      target: `.${controllerStyles.soundList}`,
+      content:
+        "HT: high top / MT: middle top / FT: floor top / BA: base drum",
+    },
+    
+    {
+      target: `.${controllerStyles.soundList}`,
+      content:
+        "각각 악기는 토글 형태로, 선택됨과 선택되지 않음으로 나뉩니다.",
+    },
+    {
+      target: `.${controllerStyles.soundActions}`,
+      content:
+        "ADD 버튼을 통해서 선택된 악기를 선택한 길이의 음표로 추가합니다.",
+    },
+    {
+      target: `.${controllerStyles.soundActions}`,
+      content:
+        "DEL 버튼을 통해서 마지막에 추가된 음표를 제거합니다.",
+    },
+    {
+      target: `.${styles.scoreBody}`,
+      content:
+        "제어 패널을 사용하지 않고 키보드로도 악보를 그릴 수 있습니다.",
+    },
+  ];
+
   const staveNum = 12;
   const [pageNum, setPageNum] = useState(0);
 
@@ -59,6 +130,10 @@ export default function ScoreBody(props: scoreBodyType) {
     props.score.noteList = scoreNoteList;
     updateScoreContent(props.score.scoreId, props.score.toContent());
   };
+
+  useEffect(() => {
+    setRunTour(true);
+  }, []);
 
   useEffect(() => {
     if (scoreNoteList.length < pageNum + 1) {
@@ -169,6 +244,13 @@ export default function ScoreBody(props: scoreBodyType) {
 
   return (
     <div className={styles.score}>
+      <Joyride
+        steps={steps}
+        continuous
+        hideCloseButton
+        showProgress
+        run={runTour}
+      />
       <ScoreHeader
         file={props.file}
         score={props.score}

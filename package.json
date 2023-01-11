@@ -24,6 +24,7 @@
     "passport-naver-v2": "^2.0.8",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-joyride": "^2.5.3",
     "sass": "^1.54.8",
     "vexflow": "^4.0.3"
   },

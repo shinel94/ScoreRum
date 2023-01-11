@@ -169,9 +169,9 @@ export default function ScoreController(props: scoreControllerType) {
       onMouseEnter={() => {
         setIsMinimize(false);
       }}
-      onMouseLeave={() => {
-        setIsMinimize(true);
-      }}
+      // onMouseLeave={() => {
+      //   setIsMinimize(true);
+      // }}
     >
       {isMinimize ? (
         <div className={styles.scoreMinimized}>C</div>
@@ -179,12 +179,12 @@ export default function ScoreController(props: scoreControllerType) {
         <div className={styles.scoreMaximized}>
           <div
             className={styles.scoreControllerHeader + " u-nondraggable"}
-            onClick={() => {
-              setIsMinimize(true);
-            }}
+            
           >
             <span>Controller</span>
-            <div>
+            <div onClick={() => {
+              setIsMinimize(true);
+            }}>
               <Icon path={mdiMinus} size="1rem" />
             </div>
           </div>
