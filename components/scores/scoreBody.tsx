@@ -85,6 +85,41 @@ export default function ScoreBody(props: scoreBodyType) {
       content:
         "제어 패널을 사용하지 않고 키보드로도 악보를 그릴 수 있습니다.",
     },
+    {
+      target: `.${styles.scoreBody}`,
+      content:
+        "음표 길이 제어는 Q(늘리기)와 E(줄이기)로 할 수 있습니다.",
+    },
+    {
+      target: `.${styles.scoreBody}`,
+      content:
+        "쉼표는 R 로 선택 및 해제할 수 있습니다.",
+    },
+    {
+      target: `.${styles.scoreBody}`,
+      content:
+        "그리고 악기의 경우, 패널의 첫번째 줄은 순서대로 ASDF",
+    },
+    {
+      target: `.${styles.scoreBody}`,
+      content:
+        "패널의 두번째 줄은 순서대로 ZXCV 를 나타냅니다.",
+    },
+    {
+      target: `.${styles.scoreBody}`,
+      content:
+        "다시말해서 A는 high hat / F는 snare / V는 base drum을 나타냅니다.",
+    },
+    {
+      target: `.${styles.scoreBody}`,
+      content:
+        "그리고 숫자패드의 +와 -로 각각 음표를 추가하고 제거할 수 있습니다.",
+    },
+    {
+      target: `.${styles.scoreBody}`,
+      content:
+        "그럼 이제 여러분의 악보를 그려보세요",
+    },
   ];
 
   const staveNum = 12;
